@@ -1,0 +1,4 @@
+# Abaixo estão listadas as bibliotecas utilizadas no projeto
+psycopg2
+tkinter
+configparser
