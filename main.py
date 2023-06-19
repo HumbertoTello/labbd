@@ -3,6 +3,7 @@ import tkinter as tk  # Importa o módulo tkinter para criar a GUI
 from tkinter import messagebox, ttk  # Importa messagebox para exibir caixas de mensagem e ttk para widgets temáticos
 import configparser # Importa o configparser para ler o arquivo config.ini
 
+# Conexão com o banco de dados
 def get_config():
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -35,7 +36,7 @@ class LoginFrame(tk.Frame):
         self.login_button = tk.Button(self, text="Login", command=self.login_user)
         self.login_button.pack()
 
-    # Função para registrar um usuário
+    # Função para registrar o usuário
     def register_user(self):
         # Pega o nome de usuário e a senha inseridos
         username = self.username_entry.get()
@@ -49,7 +50,7 @@ class LoginFrame(tk.Frame):
         register(username, password)
         messagebox.showinfo("Informação", "Registro efetuado com sucesso!")
 
-    # Função para logar um usuário
+    # Função para logar o usuário
     def login_user(self):
         # Pega o nome de usuário e a senha inseridos
         username = self.username_entry.get()
@@ -103,8 +104,8 @@ class ThirdFrame(tk.Frame):
         self.label.pack()
 
         self.tree = ttk.Treeview(self, columns=('Name', 'Year'), show='headings')
-        self.tree.heading('Name', text='Name')
-        self.tree.heading('Year', text='Year')
+        self.tree.heading('Name', text='Nome')
+        self.tree.heading('Year', text='Ano')
         self.tree.pack()
 
         data = fetch_data()
@@ -119,7 +120,7 @@ class MainApp(tk.Tk):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.geometry("640x480")  # Definindo o tamanho da janela
-        self.title("Sistema de Login")
+        self.title("Fórmula 1")
         self.current_user = None  # adicionando um atributo para armazenar o usuário atual
         self.switch_frame(LoginFrame)
 
@@ -132,26 +133,26 @@ class MainApp(tk.Tk):
             if frame is not current_frame:
                 frame.pack_forget()
 
-# Função para registrar um usuário
+# Função para registrar o usuário
 def register(username, password):
     db_config = get_config()
     conn = psycopg2.connect(**db_config)
     c = conn.cursor()
 
     # Insere o novo usuário na base de dados
-    c.execute("INSERT INTO users (username, password) VALUES (%s, md5(%s))", (username, password))
+    c.execute("INSERT INTO users (login, password) VALUES (%s, md5(%s))", (username, password))
     
     conn.commit()
     conn.close()
 
-# Função para logar um usuário
+# Função para logar o usuário
 def login(username, password):
     db_config = get_config()
     conn = psycopg2.connect(**db_config)
     c = conn.cursor()
 
     # Confere se o usuário existe na base de dados e a senha está correta
-    c.execute("SELECT * FROM users WHERE username=%s AND password=md5(%s)", (username, password))
+    c.execute("SELECT * FROM users WHERE login=%s AND password=md5(%s)", (username, password))
     user = c.fetchone()
     
     conn.close()
