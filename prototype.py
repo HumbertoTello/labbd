@@ -17,7 +17,7 @@ class LoginFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
-        # Cria os widgets para entrada do nome de usuário e senha, e os botões para registrar e logar
+        # Cria os widgets para entrada do nome de usuário e senha, e os botões para logar
         self.username_label = tk.Label(self, text="Nome de usuário")
         self.username_label.pack()
 
@@ -30,25 +30,8 @@ class LoginFrame(tk.Frame):
         self.password_entry = tk.Entry(self, show="*")
         self.password_entry.pack()
 
-        self.register_button = tk.Button(self, text="Registrar", command=self.register_user)
-        self.register_button.pack()
-
         self.login_button = tk.Button(self, text="Login", command=self.login_user)
         self.login_button.pack()
-
-    # Função para registrar o usuário
-    def register_user(self):
-        # Pega o nome de usuário e a senha inseridos
-        username = self.username_entry.get()
-        password = self.password_entry.get()
-
-        if username == "" or password == "":
-            messagebox.showerror("Erro", "Ambos os campos são obrigatórios!")
-            return
-        
-        # Insere o novo usuário na base de dados
-        register(username, password)
-        messagebox.showinfo("Informação", "Registro efetuado com sucesso!")
 
     # Função para logar o usuário
     def login_user(self):
