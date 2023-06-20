@@ -25,8 +25,8 @@ AFTER INSERT ON Driver
 FOR EACH ROW
 EXECUTE PROCEDURE update_user_on_driver_insert();
 
-/* Criação de uma TRIGGER para que sempre que um piloto for criado ou 
-modificado, o registro na tabela DRIVER ser corrigido também */
+/* Criação de uma TRIGGER para que sempre que uma escuderia for criada ou 
+modificada, o registro na tabela USERS ser corrigido também */
 CREATE OR REPLACE FUNCTION update_user_on_constructor_insert()
 RETURNS TRIGGER AS $$
 BEGIN
