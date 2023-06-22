@@ -37,5 +37,5 @@ Para configurar o projeto localmente, siga os passos abaixo:
 Após a configuração inicial, você pode executar o projeto com o seguinte comando:
 
 ```sh
-python main.py
+python app.py
 ```
