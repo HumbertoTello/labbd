@@ -24,7 +24,9 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
     Os arquivos originais para a carga de dados podem ser encontrados no Google Drive, disponíveis [aqui](https://drive.google.com/drive/folders/13TQKEhQbwXMtd1MJ_oYFplgu8ets4QsO?usp=sharing).
 
-3. **Crie a tabela `users` e `log_table`**
+    > Observe que o link do Google Drive fornecido neste projeto é acessível apenas para usuários da Universidade de São Paulo (USP). Certifique-se de estar logado com um e-mail que termine com @usp.br para obter acesso ao conteúdo do Google Drive.
+
+4. **Crie a tabela `users` e `log_table`**
 
     1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
 
