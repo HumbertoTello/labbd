@@ -98,8 +98,33 @@ class EscuderiaRegisterFrame(tk.Frame):
         self.back_button.pack()
 
     def register_escuderia(self):
-        # Código para registrar a escuderia no banco de dados
-        pass
+        constructorref = self.ref_entry.get()
+        name = self.name_entry.get()
+        nationality = self.nationality_entry.get()
+        url = self.wiki_entry.get()
+
+        constructorid = 1000 + sum(ord(char) for char in constructorref)
+
+        db_config = get_config()
+        conn = psycopg2.connect(**db_config)
+        c = conn.cursor()
+
+        try:
+            c.execute("INSERT INTO constructors (constructorid, constructorref, name, nationality, url) VALUES (%s, %s, %s, %s, %s)",
+                    (constructorid, constructorref, name, nationality, url))
+            conn.commit()
+
+            # Limpa os campos de entrada
+            self.ref_entry.delete(0, tk.END)
+            self.name_entry.delete(0, tk.END)
+            self.nationality_entry.delete(0, tk.END)
+            self.wiki_entry.delete(0, tk.END)
+
+            messagebox.showinfo("Sucesso", "Escuderia cadastrada com sucesso")
+        except psycopg2.Error as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro: {e.pgerror.split('CONTEXT')[0]}")
+        finally:
+            conn.close()
 
 # Define a janela para cadastro de pilotos
 class PilotoRegisterFrame(tk.Frame):
@@ -162,7 +187,7 @@ class PilotoRegisterFrame(tk.Frame):
                     (driverid, driverref, number, code, forename, surname, dob, nationality))
             conn.commit()
             
-            # Limpar os campos de entrada
+            # Limpa os campos de entrada
             self.ref_entry.delete(0, tk.END)
             self.number_entry.delete(0, tk.END)
             self.code_entry.delete(0, tk.END)
@@ -173,7 +198,7 @@ class PilotoRegisterFrame(tk.Frame):
 
             messagebox.showinfo("Sucesso", "Piloto cadastrado com sucesso")
         except psycopg2.Error as e:
-            messagebox.showerror("Erro", f"Ocorreu um erro: {e}")
+            messagebox.showerror("Erro", f"Ocorreu um erro: {e.pgerror.split('CONTEXT')[0]}")
         finally:
             conn.close()
 
