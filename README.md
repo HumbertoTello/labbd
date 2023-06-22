@@ -24,9 +24,11 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
     Os arquivos originais para a carga de dados podem ser encontrados no Google Drive, disponíveis [aqui](https://drive.google.com/drive/folders/13TQKEhQbwXMtd1MJ_oYFplgu8ets4QsO?usp=sharing).
 
-3. **Crie a tabela `users`**
+3. **Crie a tabela `users` e `log_table`**
 
-    Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
+    1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
+
+    2. Utilize a query contida no arquivo `create_table_log_table` para criar a tabela `log_table` no seu banco de dados local.
 
 ## Execução
 

@@ -19,14 +19,20 @@ def login(username, password):
     c = conn.cursor()
 
     # Confere se o usuário existe na base de dados e a senha está correta
-    c.execute("SELECT tipo FROM users WHERE login=%s AND password=md5(%s)", (username, password))
-    user_type = c.fetchone()
+    c.execute("SELECT userid, tipo FROM users WHERE login=%s AND password=md5(%s)", (username, password))
+    result = c.fetchone()
 
-    conn.close()
+    if result is not None:
+        user_id, user_type = result
+        
+        # Insere um registro na tabela Log_Table
+        c.execute("INSERT INTO log_table (UserId, LoginDate, LoginTime) VALUES (%s, CURRENT_DATE, CURRENT_TIME)", (user_id,))
+        conn.commit()
+        conn.close()
 
-    if user_type is not None:
-        return user_type[0]  # retornando o tipo de usuário
+        return user_type  # retornando o tipo de usuário
     else:
+        conn.close()
         return None
 
 # Define a janela de login
