@@ -43,7 +43,7 @@ class LoginSuccessFrame(tk.Frame):
         self.piloto_button = tk.Button(self, text="Cadastrar Pilotos", command=lambda: self.master.switch_frame(PilotoRegisterFrame))
         self.piloto_button.pack()
 
-        self.button = tk.Button(self, text="Ir para a Tela de relatórios", command=lambda: self.master.switch_frame(ReportFrame))
+        self.button = tk.Button(self, text="Acessar Relatórios", command=lambda: self.master.switch_frame(ReportFrame))
         self.button.pack(pady=10)
 
     # Funções para obter as informações de overview
@@ -58,16 +58,34 @@ class LoginSuccessFrame(tk.Frame):
         return pilot_count
 
     def get_constructor_count(self):
-        # Inserir a query SQL para obter a quantidade de escuderias cadastradas
+        # Inserir a query SQL para obter a quantidade de escuderias cadastradas, descomentar o código abaixo e deletar o pass
         pass
+        # db_config = get_config()
+        # conn = psycopg2.connect(**db_config)
+        # c = conn.cursor()
+        # c.execute("INSERIR A QUERY AQUI")
+        # constructor_count = c.fetchone()[0]
+        # return constructor_count
 
     def get_race_count(self):
-        # Inserir a query SQL para obter a quantidade de corridas cadastradas
+        # Inserir a query SQL para obter a quantidade de corridas cadastradas, descomentar o código abaixo e deletar o pass
         pass
+        # db_config = get_config()
+        # conn = psycopg2.connect(**db_config)
+        # c = conn.cursor()
+        # c.execute("INSERIR A QUERY AQUI")
+        # race_count = c.fetchone()[0]
+        # return race_count
 
     def get_season_count(self):
-        # Inserir a query SQL para obter a quantidade de temporadas cadastradas
+        # Inserir a query SQL para obter a quantidade de temporadas cadastradas, descomentar o código abaixo e deletar o pass
         pass
+        # db_config = get_config()
+        # conn = psycopg2.connect(**db_config)
+        # c = conn.cursor()
+        # c.execute("INSERIR A QUERY AQUI")
+        # race_count = c.fetchone()[0]
+        # return season_count
 
 # Define a janela para cadastro de escuderias
 class EscuderiaRegisterFrame(tk.Frame):
@@ -211,7 +229,7 @@ class ReportFrame(tk.Frame):
         self.label = tk.Label(self, text="Relatórios de Administrador")
         self.label.pack(pady=20)
 
-        self.status_button = tk.Button(self, text="Relatório de Status dos Resultados", command=lambda: self.master.switch_frame(ReportStatusResultsFrame))
+        self.status_button = tk.Button(self, text="Relatório de Resultados dos Status", command=lambda: self.master.switch_frame(ReportStatusResultsFrame))
         self.status_button.pack()
 
         self.airports_button = tk.Button(self, text="Relatório de Aeroportos Brasileiros Próximos", command=lambda: self.master.switch_frame(ReportAirportsFrame))
@@ -220,10 +238,13 @@ class ReportFrame(tk.Frame):
         self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame))
         self.back_button.pack(side="bottom", pady=20)
 
-# Define a janela que exibe o relatório de Status dos Resultados
+# Define a janela que exibe o relatório de Resultados dos Status
 class ReportStatusResultsFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
+
+        self.city_label = tk.Label(self, text="Relatório de Resultados dos Status")
+        self.city_label.pack(pady=20)
 
         self.create_table()
         
@@ -234,11 +255,11 @@ class ReportStatusResultsFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM races")
+        c.execute("SELECT * FROM races") # Inserir a query correta aqui
 
         data = c.fetchall()
 
-        tree = ttk.Treeview(self, show='headings')  # hide the first column
+        tree = ttk.Treeview(self, show='headings')
         tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
 
         tree.column("Coluna 1", width=100)
@@ -274,48 +295,64 @@ class ReportStatusResultsFrame(tk.Frame):
 class ReportAirportsFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
+        
+        self.city_label = tk.Label(self, text="Relatório de Aeroportos Brasileiros Próximos")
+        self.city_label.pack(pady=20)
 
-        self.create_table()
+        self.city_label = tk.Label(self, text="Insira o nome de uma cidade abaixo")
+        self.city_label.pack(pady=10)
+
+        self.city_name = tk.StringVar()
+        self.entry = tk.Entry(self, textvariable=self.city_name)
+        self.entry.pack()
+
+        self.submit_button = tk.Button(self, text="Consultar", command=self.create_table)
+        self.submit_button.pack(pady=5)
         
         self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame))
         self.back_button.pack(side="bottom", pady=20)
 
+        self.tree = None
+
     def create_table(self):
+        if self.tree is not None:
+            self.tree.destroy()
+
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM races")
+        c.execute("SELECT * FROM geocities15k WHERE name = %s", (self.city_name.get(),))
 
         data = c.fetchall()
 
-        tree = ttk.Treeview(self, show='headings')  # hide the first column
-        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+        self.tree = ttk.Treeview(self, show='headings')
+        self.tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
 
-        tree.column("Coluna 1", width=100)
-        tree.heading("Coluna 1", text="Coluna 1")
+        self.tree.column("Coluna 1", width=100)
+        self.tree.heading("Coluna 1", text="Coluna 1")
 
-        tree.column("Coluna 2", width=100)
-        tree.heading("Coluna 2", text="Coluna 2")
+        self.tree.column("Coluna 2", width=100)
+        self.tree.heading("Coluna 2", text="Coluna 2")
 
-        tree.column("Coluna 3", width=100)
-        tree.heading("Coluna 3", text="Coluna 3")
+        self.tree.column("Coluna 3", width=100)
+        self.tree.heading("Coluna 3", text="Coluna 3")
 
-        tree.column("Coluna 4", width=100)
-        tree.heading("Coluna 4", text="Coluna 4")
+        self.tree.column("Coluna 4", width=100)
+        self.tree.heading("Coluna 4", text="Coluna 4")
 
-        tree.column("Coluna 5", width=100)
-        tree.heading("Coluna 5", text="Coluna 5")
+        self.tree.column("Coluna 5", width=100)
+        self.tree.heading("Coluna 5", text="Coluna 5")
 
-        tree.column("Coluna 6", width=100)
-        tree.heading("Coluna 6", text="Coluna 6")
+        self.tree.column("Coluna 6", width=100)
+        self.tree.heading("Coluna 6", text="Coluna 6")
 
-        tree.column("Coluna 7", width=100)
-        tree.heading("Coluna 7", text="Coluna 7")
+        self.tree.column("Coluna 7", width=100)
+        self.tree.heading("Coluna 7", text="Coluna 7")
 
-        tree.column("Coluna 8", width=100)
-        tree.heading("Coluna 8", text="Coluna 8")
+        self.tree.column("Coluna 8", width=100)
+        self.tree.heading("Coluna 8", text="Coluna 8")
 
         for row in data:
-            tree.insert('', 'end', values=row)
+            self.tree.insert('', 'end', values=row)
 
-        tree.pack()
+        self.tree.pack()
