@@ -4,11 +4,13 @@ import psycopg2
 from psycopg2.extras import DictCursor
 import configparser
 
+# Função que conecta com o banco de dados
 def get_config():
     config = configparser.ConfigParser()
     config.read('config.ini')
     return config['postgresql']
 
+# Função para pegar o nome da escuderia
 def get_escuderia_name(username):
     db_config = get_config()  # a função get_config deve retornar um dicionário com as configurações do banco de dados
     conn = psycopg2.connect(**db_config)
@@ -50,8 +52,14 @@ class LoginSuccessFrame(tk.Frame):
         self.last_year_label = tk.Label(self, text=f"Último ano de dados: {last_year}")
         self.last_year_label.pack(pady=(0, 10))
 
-        self.button = tk.Button(self, text="Acessar Relatórios", command=lambda: self.master.switch_frame(ReportFrame))
+        self.button = tk.Button(self, text="Acessar Relatórios", command=lambda: self.master.switch_frame(ReportFrame(self.master, username)))
         self.button.pack()
+
+        self.logout_button = tk.Button(self, text="Sair", command=self.logout)
+        self.logout_button.pack(side="bottom", pady=50)
+    
+    def logout(self):
+        self.master.switch_frame(self.master.login_frame)
 
     def get_escuderia_info(self, escuderia_name):
         # Conecta ao banco de dados e obtém as informações sobre a escuderia
@@ -84,7 +92,7 @@ class LoginSuccessFrame(tk.Frame):
 
 # Define a janela que exibe os dados buscados do banco de dados para Escuderia
 class ReportFrame(tk.Frame):
-    def __init__(self, master=None, **kwargs):
+    def __init__(self, master=None, username=None, **kwargs):
         super().__init__(master, **kwargs)
 
         # código específico da Escuderia aqui

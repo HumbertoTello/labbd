@@ -37,14 +37,20 @@ class LoginSuccessFrame(tk.Frame):
         self.seasons_label = tk.Label(self, text=f"Temporadas cadastradas: {season_count}")
         self.seasons_label.pack(pady=(0, 10))
 
-        self.escuderia_button = tk.Button(self, text="Cadastrar Escuderias", command=lambda: self.master.switch_frame(EscuderiaRegisterFrame))
+        self.escuderia_button = tk.Button(self, text="Cadastrar Escuderias", command=lambda: self.master.switch_frame(EscuderiaRegisterFrame(self.master)))
         self.escuderia_button.pack()
 
-        self.piloto_button = tk.Button(self, text="Cadastrar Pilotos", command=lambda: self.master.switch_frame(PilotoRegisterFrame))
+        self.piloto_button = tk.Button(self, text="Cadastrar Pilotos", command=lambda: self.master.switch_frame(PilotoRegisterFrame(self.master)))
         self.piloto_button.pack()
 
-        self.button = tk.Button(self, text="Acessar Relatórios", command=lambda: self.master.switch_frame(ReportFrame))
+        self.button = tk.Button(self, text="Acessar Relatórios", command=lambda: self.master.switch_frame(ReportFrame(self.master)))
         self.button.pack(pady=10)
+
+        self.logout_button = tk.Button(self, text="Sair", command=self.logout)
+        self.logout_button.pack(side="bottom", pady=50)
+
+    def logout(self):
+        self.master.switch_frame(self.master.login_frame)
 
     # Funções para obter as informações de overview
     def get_pilot_count(self):
@@ -113,7 +119,7 @@ class EscuderiaRegisterFrame(tk.Frame):
         self.register_button = tk.Button(self, text="Cadastrar", command=self.register_escuderia)
         self.register_button.pack(pady=10)
 
-        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame))
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame(self.master)))
         self.back_button.pack()
 
     def register_escuderia(self):
@@ -183,7 +189,7 @@ class PilotoRegisterFrame(tk.Frame):
         self.register_button = tk.Button(self, text="Cadastrar", command=self.register_piloto)
         self.register_button.pack(pady=10)
 
-        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame))
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame(self.master)))
         self.back_button.pack()
 
     def register_piloto(self):
@@ -229,13 +235,13 @@ class ReportFrame(tk.Frame):
         self.label = tk.Label(self, text="Relatórios de Administrador")
         self.label.pack(pady=20)
 
-        self.status_button = tk.Button(self, text="Relatório de Resultados dos Status", command=lambda: self.master.switch_frame(ReportStatusResultsFrame))
+        self.status_button = tk.Button(self, text="Relatório de Resultados dos Status", command=lambda: self.master.switch_frame(ReportStatusResultsFrame(self.master)))
         self.status_button.pack()
 
-        self.airports_button = tk.Button(self, text="Relatório de Aeroportos Brasileiros Próximos", command=lambda: self.master.switch_frame(ReportAirportsFrame))
+        self.airports_button = tk.Button(self, text="Relatório de Aeroportos Brasileiros Próximos", command=lambda: self.master.switch_frame(ReportAirportsFrame(self.master)))
         self.airports_button.pack()
 
-        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame))
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame(self.master)))
         self.back_button.pack(side="bottom", pady=20)
 
 # Define a janela que exibe o relatório de Resultados dos Status
@@ -248,7 +254,7 @@ class ReportStatusResultsFrame(tk.Frame):
 
         self.create_table()
         
-        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame))
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame(self.master)))
         self.back_button.pack(side="bottom", pady=20)
 
     def create_table(self):
@@ -309,7 +315,7 @@ class ReportAirportsFrame(tk.Frame):
         self.submit_button = tk.Button(self, text="Consultar", command=self.create_table)
         self.submit_button.pack(pady=5)
         
-        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame))
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame(self.master)))
         self.back_button.pack(side="bottom", pady=20)
 
         self.tree = None

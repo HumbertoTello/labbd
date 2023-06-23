@@ -80,7 +80,7 @@ class LoginFrame(tk.Frame):
             else:
                 raise ValueError(f"User type {user_type} not recognized")
 
-            self.master.switch_frame(frame_class, username)
+            self.master.switch_frame(frame_class(self.master, username))
         else:
             messagebox.showerror("Erro", "Nome de usuário ou senha incorretos!")
 
@@ -90,12 +90,14 @@ class MainApp(tk.Tk):
         super().__init__(**kwargs)
         self.geometry("1280x720")  # Definindo o tamanho da janela
         self.title("Fórmula 1")
-        self.current_user = None  # adicionando um atributo para armazenar o usuário atual
-        self.switch_frame(LoginFrame)
+        self.current_user = None  # Adicionando um atributo para armazenar o usuário atual
+
+        self.login_frame = LoginFrame(self)  # Cria o frame de login e armazena como um atributo
+        self.switch_frame(self.login_frame)  # Utiliza o frame de login armazenado para iniciar a aplicação
 
     # Função para alternar entre janelas
-    def switch_frame(self, frame_class, *args, **kwargs):
-        current_frame = frame_class(self, *args, **kwargs)
+    def switch_frame(self, frame_instance, *args, **kwargs):
+        current_frame = frame_instance
         current_frame.pack()
 
         for frame in self.pack_slaves():

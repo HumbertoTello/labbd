@@ -9,12 +9,18 @@ class LoginSuccessFrame(tk.Frame):
         self.label = tk.Label(self, text=f"Olá, piloto {username}!")
         self.label.pack()
 
-        self.button = tk.Button(self, text="Ir para a Tela 3", command=lambda: self.master.switch_frame(ThirdFrame))
+        self.button = tk.Button(self, text="Ir para a Tela 3", command=lambda: self.master.switch_frame(ReportFrame(self.master, username)))
         self.button.pack()
 
+        self.logout_button = tk.Button(self, text="Sair", command=self.logout)
+        self.logout_button.pack(side="bottom", pady=50)
+
+    def logout(self):
+        self.master.switch_frame(self.master.login_frame)
+
 # Define a janela que exibe os dados buscados do banco de dados para Piloto
-class ThirdFrame(tk.Frame):
-    def __init__(self, master=None, **kwargs):
+class ReportFrame(tk.Frame):
+    def __init__(self, master=None, username=None, **kwargs):
         super().__init__(master, **kwargs)
 
         # código específico do Piloto aqui
