@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import psycopg2
 import configparser
 
+# Configuração da conexão com o banco de dados
 def get_config():
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -14,7 +15,7 @@ class LoginSuccessFrame(tk.Frame):
         super().__init__(master, **kwargs)
 
         self.label = tk.Label(self, text=f"Olá, Admin!")
-        self.label.pack()
+        self.label.pack(pady=20)
 
         # Obtém a quantidade de pilotos cadastrados
         pilot_count = self.get_pilot_count()  # Substitua com a função apropriada
@@ -34,7 +35,7 @@ class LoginSuccessFrame(tk.Frame):
         # Obtém a quantidade de temporadas (seasons) cadastradas
         season_count = self.get_season_count()  # Substitua com a função apropriada
         self.seasons_label = tk.Label(self, text=f"Temporadas cadastradas: {season_count}")
-        self.seasons_label.pack()
+        self.seasons_label.pack(pady=(0, 10))
 
         self.escuderia_button = tk.Button(self, text="Cadastrar Escuderias", command=lambda: self.master.switch_frame(EscuderiaRegisterFrame))
         self.escuderia_button.pack()
@@ -42,7 +43,7 @@ class LoginSuccessFrame(tk.Frame):
         self.piloto_button = tk.Button(self, text="Cadastrar Pilotos", command=lambda: self.master.switch_frame(PilotoRegisterFrame))
         self.piloto_button.pack()
 
-        self.button = tk.Button(self, text="Ir para a Tela de relatórios", command=lambda: self.master.switch_frame(ThirdFrame))
+        self.button = tk.Button(self, text="Ir para a Tela de relatórios", command=lambda: self.master.switch_frame(ReportFrame))
         self.button.pack(pady=10)
 
     # Funções para obter as informações de overview
@@ -202,9 +203,119 @@ class PilotoRegisterFrame(tk.Frame):
         finally:
             conn.close()
 
-# Define a janela que exibe os dados buscados do banco de dados para Admin
-class ThirdFrame(tk.Frame):
+# Define a janela que exibe os relatórios disponíveis para Admin
+class ReportFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
-        # código específico do Admin aqui
+        self.label = tk.Label(self, text="Relatórios de Administrador")
+        self.label.pack(pady=20)
+
+        self.status_button = tk.Button(self, text="Relatório de Status dos Resultados", command=lambda: self.master.switch_frame(ReportStatusResultsFrame))
+        self.status_button.pack()
+
+        self.airports_button = tk.Button(self, text="Relatório de Aeroportos Brasileiros Próximos", command=lambda: self.master.switch_frame(ReportAirportsFrame))
+        self.airports_button.pack()
+
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(LoginSuccessFrame))
+        self.back_button.pack(side="bottom", pady=20)
+
+# Define a janela que exibe o relatório de Status dos Resultados
+class ReportStatusResultsFrame(tk.Frame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.create_table()
+        
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame))
+        self.back_button.pack(side="bottom", pady=20)
+
+    def create_table(self):
+        db_config = get_config()
+        conn = psycopg2.connect(**db_config)
+        c = conn.cursor()
+        c.execute("SELECT * FROM races")
+
+        data = c.fetchall()
+
+        tree = ttk.Treeview(self, show='headings')  # hide the first column
+        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+
+        tree.column("Coluna 1", width=100)
+        tree.heading("Coluna 1", text="Coluna 1")
+
+        tree.column("Coluna 2", width=100)
+        tree.heading("Coluna 2", text="Coluna 2")
+
+        tree.column("Coluna 3", width=100)
+        tree.heading("Coluna 3", text="Coluna 3")
+
+        tree.column("Coluna 4", width=100)
+        tree.heading("Coluna 4", text="Coluna 4")
+
+        tree.column("Coluna 5", width=100)
+        tree.heading("Coluna 5", text="Coluna 5")
+
+        tree.column("Coluna 6", width=100)
+        tree.heading("Coluna 6", text="Coluna 6")
+
+        tree.column("Coluna 7", width=100)
+        tree.heading("Coluna 7", text="Coluna 7")
+
+        tree.column("Coluna 8", width=100)
+        tree.heading("Coluna 8", text="Coluna 8")
+
+        for row in data:
+            tree.insert('', 'end', values=row)
+
+        tree.pack()
+
+# Define a janela que exibe o relatório de Aeroportos Brasileiros Próximos
+class ReportAirportsFrame(tk.Frame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.create_table()
+        
+        self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame))
+        self.back_button.pack(side="bottom", pady=20)
+
+    def create_table(self):
+        db_config = get_config()
+        conn = psycopg2.connect(**db_config)
+        c = conn.cursor()
+        c.execute("SELECT * FROM races")
+
+        data = c.fetchall()
+
+        tree = ttk.Treeview(self, show='headings')  # hide the first column
+        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+
+        tree.column("Coluna 1", width=100)
+        tree.heading("Coluna 1", text="Coluna 1")
+
+        tree.column("Coluna 2", width=100)
+        tree.heading("Coluna 2", text="Coluna 2")
+
+        tree.column("Coluna 3", width=100)
+        tree.heading("Coluna 3", text="Coluna 3")
+
+        tree.column("Coluna 4", width=100)
+        tree.heading("Coluna 4", text="Coluna 4")
+
+        tree.column("Coluna 5", width=100)
+        tree.heading("Coluna 5", text="Coluna 5")
+
+        tree.column("Coluna 6", width=100)
+        tree.heading("Coluna 6", text="Coluna 6")
+
+        tree.column("Coluna 7", width=100)
+        tree.heading("Coluna 7", text="Coluna 7")
+
+        tree.column("Coluna 8", width=100)
+        tree.heading("Coluna 8", text="Coluna 8")
+
+        for row in data:
+            tree.insert('', 'end', values=row)
+
+        tree.pack()

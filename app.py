@@ -2,9 +2,9 @@ import psycopg2  # Importa o módulo psycopg2 para conectar com o PostgreSQL
 import tkinter as tk  # Importa o módulo tkinter para criar a GUI
 from tkinter import messagebox  # Importa messagebox para exibir caixas de mensagem
 import configparser  # Importa configparser para ler o arquivo config.ini
-from admin import LoginSuccessFrame as AdminLoginSuccessFrame, ThirdFrame as AdminThirdFrame
-from escuderia import LoginSuccessFrame as EscuderiaLoginSuccessFrame, ThirdFrame as EscuderiaThirdFrame
-from piloto import LoginSuccessFrame as PilotoLoginSuccessFrame, ThirdFrame as PilotoThirdFrame
+from admin import LoginSuccessFrame as AdminLoginSuccessFrame
+from escuderia import LoginSuccessFrame as EscuderiaLoginSuccessFrame
+from piloto import LoginSuccessFrame as PilotoLoginSuccessFrame
 
 # Conexão com o banco de dados
 def get_config():
@@ -42,7 +42,7 @@ class LoginFrame(tk.Frame):
 
         # Cria os widgets para entrada do nome de usuário e senha e o botão para logar
         self.username_label = tk.Label(self, text="Nome de usuário")
-        self.username_label.pack()
+        self.username_label.pack(pady=(10, 0))
 
         self.username_entry = tk.Entry(self)
         self.username_entry.pack()
@@ -54,7 +54,7 @@ class LoginFrame(tk.Frame):
         self.password_entry.pack()
 
         self.login_button = tk.Button(self, text="Login", command=self.login_user)
-        self.login_button.pack()
+        self.login_button.pack(pady=10)
 
     # Função para logar o usuário
     def login_user(self):
@@ -88,7 +88,7 @@ class LoginFrame(tk.Frame):
 class MainApp(tk.Tk):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.geometry("640x480")  # Definindo o tamanho da janela
+        self.geometry("1280x720")  # Definindo o tamanho da janela
         self.title("Fórmula 1")
         self.current_user = None  # adicionando um atributo para armazenar o usuário atual
         self.switch_frame(LoginFrame)
