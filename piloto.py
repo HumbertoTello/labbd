@@ -187,7 +187,7 @@ class ReportResultsFrame(tk.Frame):
 
         self.username = username
 
-        self.city_label = tk.Label(self, text="Relatório de Listagem de Vitórias do Piloto")
+        self.city_label = tk.Label(self, text="Relatório de Listagem de Resultados por Status")
         self.city_label.pack(pady=20)
 
         self.create_table()
