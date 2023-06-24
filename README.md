@@ -39,3 +39,31 @@ Após a configuração inicial, você pode executar o projeto com o seguinte com
 ```sh
 python app.py
 ```
+
+## Acesso à Aplicação
+
+O acesso à ferramenta só pode ser feito por meio de login, onde cada usuário terá acesso específico com base no seu tipo de usuário.
+
+### Usuário Administrador
+
+- Login: admin
+- Senha: admin
+- Descrição: O usuário administrador tem acesso completo a todas as informações da base de dados. Ele pode visualizar, editar e gerenciar todas as informações disponíveis na aplicação.
+
+### Usuário Escuderia
+
+- Login: [constructorref]_c
+- Senha: [constructorref]
+- Exemplo: Para a escuderia McLaren:
+  - Login: mclaren_c
+  - Senha: mclaren
+- Descrição: O usuário escuderia tem acesso somente às informações relacionadas à sua escuderia específica e aos pilotos que correm por ela. Ele pode visualizar e editar apenas essas informações específicas.
+
+### Usuário Piloto
+
+- Login: [driverref]_d
+- Senha: [driverref]
+- Exemplo: Para o piloto Hamilton:
+  - Login: hamilton_d
+  - Senha: hamilton
+- Descrição: O usuário piloto tem acesso às informações relacionadas ao seu próprio desempenho. Ele pode visualizar e editar informações específicas sobre suas corridas, pontuações e estatísticas individuais.
