@@ -28,6 +28,22 @@ def get_escuderia_name(username):
 
     return name
 
+# Função para pegar o id da escuderia
+def get_escuderia_id(username):
+    db_config = get_config()  # a função get_config deve retornar um dicionário com as configurações do banco de dados
+    conn = psycopg2.connect(**db_config)
+    c = conn.cursor()
+
+    c.execute("""SELECT IdOriginal 
+                FROM users
+                WHERE Login = %s AND Tipo = 'Escuderia';""", (username,))
+
+    escuderia_id = c.fetchone()[0]
+    c.close()
+    conn.close()
+
+    return escuderia_id
+
 # Define a janela exibida após o login bem-sucedido para Escuderia
 class LoginSuccessFrame(tk.Frame):
     def __init__(self, master=None, username=None, **kwargs):
@@ -198,12 +214,12 @@ class ReportDriversFrame(tk.Frame):
         self.back_button.pack(side="bottom", pady=20)
 
     def create_table(self):
-        escuderia_name = get_escuderia_name(self.username)
+        escuderia_id = get_escuderia_id(self.username)
 
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM constructors WHERE name = %s", (escuderia_name,)) # Inserir a query correta aqui
+        c.execute("SELECT * FROM constructors WHERE constructorid = %s", (escuderia_id,)) # Inserir a query correta aqui
 
         data = c.fetchall()
 
@@ -255,12 +271,12 @@ class ReportResultsFrame(tk.Frame):
         self.back_button.pack(side="bottom", pady=20)
 
     def create_table(self):
-        escuderia_name = get_escuderia_name(self.username)
+        escuderia_id = get_escuderia_id(self.username)
 
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM constructors WHERE name = %s", (escuderia_name,)) # Inserir a query correta aqui
+        c.execute("SELECT * FROM constructors WHERE constructorid = %s", (escuderia_id,)) # Inserir a query correta aqui
 
         data = c.fetchall()
 
