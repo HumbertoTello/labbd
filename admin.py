@@ -170,6 +170,8 @@ class PilotoRegisterFrame(tk.Frame):
         self.dob_entry = tk.Entry(self)
         self.nationality_label = tk.Label(self, text="Nacionalidade")
         self.nationality_entry = tk.Entry(self)
+        self.wiki_label = tk.Label(self, text="Wiki")
+        self.wiki_entry = tk.Entry(self)
 
         self.ref_label.pack()
         self.ref_entry.pack()
@@ -185,6 +187,8 @@ class PilotoRegisterFrame(tk.Frame):
         self.dob_entry.pack()
         self.nationality_label.pack()
         self.nationality_entry.pack()
+        self.wiki_label.pack()
+        self.wiki_entry.pack()
 
         self.register_button = tk.Button(self, text="Cadastrar", command=self.register_piloto)
         self.register_button.pack(pady=10)
@@ -200,6 +204,7 @@ class PilotoRegisterFrame(tk.Frame):
         surname = self.surname_entry.get()
         dob = self.dob_entry.get()
         nationality = self.nationality_entry.get()
+        wiki = self.wiki_entry.get()
 
         driverid = 1000 + sum(ord(char) for char in driverref)
 
@@ -208,10 +213,10 @@ class PilotoRegisterFrame(tk.Frame):
         c = conn.cursor()
 
         try:
-            c.execute("INSERT INTO driver (driverid, driverref, number, code, forename, surname, dob, nationality) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                    (driverid, driverref, number, code, forename, surname, dob, nationality))
+            c.execute("INSERT INTO driver (driverid, driverref, number, code, forename, surname, dob, nationality, url) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                    (driverid, driverref, number, code, forename, surname, dob, nationality, wiki))
             conn.commit()
-            
+
             # Limpa os campos de entrada
             self.ref_entry.delete(0, tk.END)
             self.number_entry.delete(0, tk.END)
@@ -220,6 +225,7 @@ class PilotoRegisterFrame(tk.Frame):
             self.surname_entry.delete(0, tk.END)
             self.dob_entry.delete(0, tk.END)
             self.nationality_entry.delete(0, tk.END)
+            self.wiki_entry.delete(0, tk.END)
 
             messagebox.showinfo("Sucesso", "Piloto cadastrado com sucesso")
         except psycopg2.Error as e:
