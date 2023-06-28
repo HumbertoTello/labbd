@@ -26,11 +26,15 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
     > Observe que o link do Google Drive fornecido neste projeto é acessível apenas para usuários da Universidade de São Paulo (USP). Certifique-se de estar logado com um e-mail que termine com @usp.br para obter acesso ao conteúdo do Google Drive.
 
-4. **Crie a tabela `users` e `log_table`**
+3. **Execute os .sql**
 
     1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
 
-    2. Utilize a query contida no arquivo `create_table_log_table` para criar a tabela `log_table` no seu banco de dados local.
+    2. Utilize a query contida no arquivo `create_table_log_table.sql` para criar a tabela `log_table` no seu banco de dados local.
+
+    3. Utilize a query contida no arquivo `extensions.sql` para instalar as extensões necessárias no seu banco de dados local.
+
+    4. Utilize a query contida no arquivo `create_index_airport.sql` para criar o índice usado no Relatório 2 de Admin.
 
 ## Execução
 
