@@ -81,24 +81,22 @@ class LoginSuccessFrame(tk.Frame):
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
 
+        # get driver id
+        c.execute(
+            """ SELECT DriverId 
+                FROM Driver 
+                WHERE Forename = %s AND Surname = %s""",
+                (forename, surname,))
+        driver_id = c.fetchone()[0]
+
         # Consulta para obter a quantidade de vitórias do piloto
-        c.execute("""SELECT COUNT(*) 
-             FROM Results 
-             WHERE DriverId = (SELECT DriverId 
-                               FROM Driver 
-                               WHERE Forename = %s AND Surname = %s) 
-             AND Position = 1""", (forename, surname,))
+        c.callproc('quant_vitorias_piloto',(driver_id,))
         victory_count = c.fetchone()[0]
 
-        # Consulta para obter o primeiro ano em que há dados do piloto na base
-        # c.execute("INSERIR A QUERY AQUI", (forename, surname,))
-        # first_year = c.fetchone()[0]
-        first_year = 0 # Inserir a query, descomentar o código acima e deletar essa linha
-
-        # Consulta para obter o último ano em que há dados do piloto na base
-        # c.execute("INSERIR A QUERY AQUI", (forename, surname,))
-        # last_year = c.fetchone()[0]
-        last_year = 0 # Inserir a query, descomentar o código acima e deletar essa linha
+        #  Primeiro e último ano em que há dados
+        #  do piloto na base (pela tabela RESULTS).
+        c.callproc('primeiro_ultimo_ano_piloto',(driver_id,))
+        first_year, last_year = c.fetchone()
 
         conn.close()
 
@@ -159,21 +157,6 @@ class ReportWinsFrame(tk.Frame):
 
         tree.column("Coluna 3", width=100)
         tree.heading("Coluna 3", text="Coluna 3")
-
-        tree.column("Coluna 4", width=100)
-        tree.heading("Coluna 4", text="Coluna 4")
-
-        tree.column("Coluna 5", width=100)
-        tree.heading("Coluna 5", text="Coluna 5")
-
-        tree.column("Coluna 6", width=100)
-        tree.heading("Coluna 6", text="Coluna 6")
-
-        tree.column("Coluna 7", width=100)
-        tree.heading("Coluna 7", text="Coluna 7")
-
-        tree.column("Coluna 8", width=100)
-        tree.heading("Coluna 8", text="Coluna 8")
 
         for row in data:
             tree.insert('', 'end', values=row)

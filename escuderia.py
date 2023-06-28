@@ -86,25 +86,25 @@ class LoginSuccessFrame(tk.Frame):
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
 
+        # adquirir id da escuderia
+        c.execute("""
+            SELECT ConstructorId 
+            FROM Constructors 
+            WHERE Name = %s;
+        """,(escuderia_name,))
+        escuderia_id = c.fetchone()[0]
+
         # Consulta para obter a quantidade de vitórias da escuderia
-        c.execute("SELECT COUNT(*) FROM Results WHERE ConstructorId = (SELECT ConstructorId FROM Constructors WHERE Name = %s) AND Position = 1", (escuderia_name,))
+        c.callproc('quant_vitorias_escuderia',(escuderia_id,))
         victory_count = c.fetchone()[0]
 
         # Consulta para obter a quantidade de pilotos diferentes que já correram pela escuderia
-        # c.execute("INSERIR A QUERY AQUI", (escuderia_name,))
-        # different_pilots = c.fetchone()[0]
-        different_pilots = 0 # Inserir a query, descomentar o código acima e deletar essa linha
+        c.callproc('quant_pilotos_diferentes',(escuderia_id,))
+        different_pilots = c.fetchone()[0]
 
-        # Consulta para obter o primeiro ano em que há dados da escuderia na base
-        # c.execute("INSERIR A QUERY AQUI", (escuderia_name,))
-        # first_year = c.fetchone()[0]
-        first_year = 0 # Inserir a query, descomentar o código acima e deletar essa linha
-
-        # Consulta para obter o último ano em que há dados da escuderia na base
-        # c.execute("INSERIR A QUERY AQUI", (escuderia_name,))
-        # last_year = c.fetchone()[0]
-        last_year = 0 # Inserir a query, descomentar o código acima e deletar essa linha
-
+        # Consulta para obter o primeiro e ultimo ano em que há dados da escuderia na base
+        c.callproc('primeiro_ultimo_ano_escuderia',(escuderia_id,))
+        first_year,last_year = c.fetchone() # must unpack 2 values
         conn.close()
 
         return victory_count, different_pilots, first_year, last_year
@@ -143,7 +143,8 @@ class SearchByFirstName(tk.Frame):
                      FROM Driver AS D
                      INNER JOIN Results AS R ON R.DriverId = D.DriverId
                      INNER JOIN Constructors AS C ON C.ConstructorId = R.ConstructorId
-                     WHERE C.Name = %s AND D.Forename = %s;
+                     WHERE lower(C.Name) = lower(%s) AND 
+                     lower(D.Forename) = lower(%s);
                   """, (escuderia_name, forename,))
 
         pilots = c.fetchall()
@@ -219,36 +220,19 @@ class ReportDriversFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM constructors WHERE constructorid = %s", (escuderia_id,)) # Inserir a query correta aqui
 
+
+        c.callproc("pilotos_por_escuderia_rel_3", (escuderia_id,)) 
         data = c.fetchall()
 
         tree = ttk.Treeview(self, show='headings')
-        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+        tree["columns"] = ("Nome","Vitorias")
 
-        tree.column("Coluna 1", width=100)
-        tree.heading("Coluna 1", text="Coluna 1")
+        tree.column("Nome", width=200)
+        tree.heading("Nome", text="Nome")
 
-        tree.column("Coluna 2", width=100)
-        tree.heading("Coluna 2", text="Coluna 2")
-
-        tree.column("Coluna 3", width=100)
-        tree.heading("Coluna 3", text="Coluna 3")
-
-        tree.column("Coluna 4", width=100)
-        tree.heading("Coluna 4", text="Coluna 4")
-
-        tree.column("Coluna 5", width=100)
-        tree.heading("Coluna 5", text="Coluna 5")
-
-        tree.column("Coluna 6", width=100)
-        tree.heading("Coluna 6", text="Coluna 6")
-
-        tree.column("Coluna 7", width=100)
-        tree.heading("Coluna 7", text="Coluna 7")
-
-        tree.column("Coluna 8", width=100)
-        tree.heading("Coluna 8", text="Coluna 8")
+        tree.column("Vitorias", width=100)
+        tree.heading("Vitorias", text="Vitorias")
 
         for row in data:
             tree.insert('', 'end', values=row)
@@ -276,36 +260,17 @@ class ReportResultsFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM constructors WHERE constructorid = %s", (escuderia_id,)) # Inserir a query correta aqui
-
+        c.callproc("status_por_escuderia_rel_4", (escuderia_id,))
         data = c.fetchall()
 
         tree = ttk.Treeview(self, show='headings')
-        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+        tree["columns"] = ("Status", "Quantidade")
 
-        tree.column("Coluna 1", width=100)
-        tree.heading("Coluna 1", text="Coluna 1")
+        tree.column("Status", width=200)
+        tree.heading("Status", text="Status")
 
-        tree.column("Coluna 2", width=100)
-        tree.heading("Coluna 2", text="Coluna 2")
-
-        tree.column("Coluna 3", width=100)
-        tree.heading("Coluna 3", text="Coluna 3")
-
-        tree.column("Coluna 4", width=100)
-        tree.heading("Coluna 4", text="Coluna 4")
-
-        tree.column("Coluna 5", width=100)
-        tree.heading("Coluna 5", text="Coluna 5")
-
-        tree.column("Coluna 6", width=100)
-        tree.heading("Coluna 6", text="Coluna 6")
-
-        tree.column("Coluna 7", width=100)
-        tree.heading("Coluna 7", text="Coluna 7")
-
-        tree.column("Coluna 8", width=100)
-        tree.heading("Coluna 8", text="Coluna 8")
+        tree.column("Quantidade", width=100)
+        tree.heading("Quantidade", text="Quantidade")
 
         for row in data:
             tree.insert('', 'end', values=row)
