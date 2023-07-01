@@ -48,3 +48,4 @@ BEGIN
         order by 2 desc;
 END; $$ language plpgsql;
 select * from status_das_corridas_do_piloto_relatorio6(1);
+

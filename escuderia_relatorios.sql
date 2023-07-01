@@ -3,7 +3,9 @@
 -- que cada um deles alcançou a primeira posição em uma corrida. Os pilotos são
 -- identificados por seu nome completo.
 
-
+-- indices
+-- results (driverid,constructor) insert(position)
+-- drivers (driverid) insert name insert(forename,surname)
 
 create or replace function pilotos_por_escuderia_rel_3(
     IN _id int)
@@ -23,6 +25,7 @@ BEGIN
              join driver d on dr.driverid=d.driverid
     order by Vitorias desc;
 END; $$ language plpgsql;
+
 
 -- indices
 -- results (driverid,constructor) insert(position)
