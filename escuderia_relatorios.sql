@@ -3,9 +3,7 @@
 -- que cada um deles alcançou a primeira posição em uma corrida. Os pilotos são
 -- identificados por seu nome completo.
 
--- indices
--- results (driverid,constructor) insert(position)
--- drivers (driverid) insert name insert(forename,surname)
+
 
 create or replace function pilotos_por_escuderia_rel_3(
     IN _id int)
@@ -25,8 +23,16 @@ BEGIN
              join driver d on dr.driverid=d.driverid
     order by Vitorias desc;
 END; $$ language plpgsql;
--- select * from pilotos_por_escuderia_rel_3(1);
 
+-- indices
+-- results (driverid,constructor) insert(position)
+-- drivers (driverid) insert name insert(forename,surname)
+drop index if exists idx_results_relatorio3;
+create index idx_results_relatorio3 ON
+    results(driverid,constructorid) include(position);
+
+explain analyse verbose
+select pilotos_por_escuderia_rel_3(1);
 
 -- Relatório 4: Lista a quantidade de resultados por cada status, apresentando o
 -- status e sua contagem, limitadas ao escopo de sua escuderia

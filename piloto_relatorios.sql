@@ -26,3 +26,25 @@ select * from vitorias_piloto_relatorio5(1);
 
 -- Relatório 6: lista a quantidade de resultados por cada status, apresentando o status
 -- e sua contagem, limitada ao escopo do piloto logado.
+
+create or replace function status_das_corridas_do_piloto_relatorio6(
+    IN _id int)
+    RETURNS TABLE(Status text,Quantidade int) as $$
+BEGIN
+    RETURN QUERY
+        with status_construtor as(
+            select
+                statusid,
+                count(1) as Quantidade
+            from results
+            where driverid= _id
+            group by statusid
+        ) select
+              s.status as Status,
+              sc.Quantidade::int
+        from status_construtor sc
+                 join status s
+                      on s.statusid=sc.statusid
+        order by 2 desc;
+END; $$ language plpgsql;
+select * from status_das_corridas_do_piloto_relatorio6(1);
