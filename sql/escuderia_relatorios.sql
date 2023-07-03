@@ -6,21 +6,7 @@
 -- indices
 drop index if exists idx_relatorio3; -- no index 0.3 + 5.7
 create index idx_relatorio3 ON
-    results(constructorid,driverid) include(position); -- 0.22 + 1.9
-
-explain analyse verbose
-    with drivers_results as(
-        SELECT driverid,
-               COUNT(driverid) filter ( where position = 1) as Vitorias
-        FROM Results
-        WHERE ConstructorId = 1
-        GROUP BY driverid
-    ) select
-                  d.forename||' '||d.surname::text as Nome,
-                  dr.Vitorias::int
-    from drivers_results dr
-             join driver d on dr.driverid=d.driverid
-    order by Vitorias desc;
+    results(constructorid) include(driverid,position); -- 0.22 + 1.9
 
 create or replace function pilotos_por_escuderia_rel_3(
     IN _id int)
@@ -29,15 +15,15 @@ BEGIN
     RETURN QUERY
     with drivers_results as(
         SELECT driverid,
-               COUNT(driverid) filter ( where position = 1) as Vitorias
+            COUNT(driverid) filter ( where position = 1) as Vitorias
         FROM Results
         WHERE ConstructorId = _id
         GROUP BY driverid
     ) select
-          d.forename||' '||d.surname::text as Nome,
-          dr.Vitorias::int
+        d.forename||' '||d.surname::text as Nome,
+        dr.Vitorias::int
     from drivers_results dr
-             join driver d on dr.driverid=d.driverid
+            join driver d on dr.driverid=d.driverid
     order by Vitorias desc;
 END; $$ language plpgsql;
 
@@ -54,17 +40,17 @@ BEGIN
         with status_construtor as(
             select
                 statusid,
-               count(1) as Quantidade
+            count(1) as Quantidade
             from results
             where constructorid = _id
             group by statusid
         ) select
-              s.status as Status,
-              sc.Quantidade::int
+            s.status as Status,
+            sc.Quantidade::int
         from status_construtor sc
-             join status s
-                 on s.statusid=sc.statusid
+            join status s
+                on s.statusid=sc.statusid
         order by 2 desc;
 END; $$ language plpgsql;
-select * from status_por_escuderia_rel_4(1);
+-- select * from status_por_escuderia_rel_4(1);
 

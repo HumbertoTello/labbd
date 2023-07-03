@@ -6,7 +6,7 @@
 
 -- indexação: condições são sempre driverid e position da tabela results
 drop index if exists idx_relatorio5; -- 0.43 + 5.4ms
-create index idx_relatorio5 on results(driverid,position); -- 0.34 + 1.3ms
+create index idx_relatorio5 on results(driverid) where position = 1; -- 0.55 + 1.3ms
 
 create or replace function vitorias_piloto_relatorio5(
     IN _id int)
@@ -20,9 +20,10 @@ BEGIN
         from results re
                  join races ra on
                 re.raceid = ra.raceid
-        where re.driverid = _id and
+        where re.driverid = 1 and
                 re.position = 1
-        group by rollup(ra.year,ra.name);
+        group by rollup(ra.year,ra.name)
+        order by ra.year ;
 END; $$ language plpgsql;
 -- select * from vitorias_piloto_relatorio5(1);
 
