@@ -5,15 +5,15 @@ DROP MATERIALIZED VIEW IF EXISTS airport_city_distances;
 -- que já armazena as informações de aeroportos próximos de cidades brasileiras
 CREATE MATERIALIZED VIEW airport_city_distances AS
 SELECT
-    a.id as airport_id,
+    a.ident as airport_id,
     c.geonameid as city_id,
-    earth_distance(ll_to_earth(a.latitude_deg, a.longitude_deg), ll_to_earth(c.lat, c.long)) / 1000 AS distance
+    earth_distance(ll_to_earth(a.latdeg, a.longdeg), ll_to_earth(c.lat, c.long)) / 1000 AS distance
 FROM
     airports a
         JOIN
-    geocities15k c ON (earth_distance(ll_to_earth(a.latitude_deg, a.longitude_deg), ll_to_earth(c.lat, c.long)) / 1000) < 100
+    geocities15k c ON (earth_distance(ll_to_earth(a.latdeg, a.longdeg), ll_to_earth(c.lat, c.long)) / 1000) < 100
 WHERE
-        a.iso_country = 'BR'
+        a.isocountry = 'BR'
   AND a.type in ('medium_airport', 'large_airport')
 ;
 
