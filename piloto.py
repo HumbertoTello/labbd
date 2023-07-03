@@ -132,13 +132,13 @@ class ReportWinsFrame(tk.Frame):
         self.city_label.pack(pady=20)
 
         self.create_table()
-        
+
         self.back_button = tk.Button(self, text="Voltar", command=lambda: self.master.switch_frame(ReportFrame(self.master, username)))
         self.back_button.pack(side="bottom", pady=20)
 
     def create_table(self):
         piloto_id = get_piloto_id(self.username)
-        
+
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()

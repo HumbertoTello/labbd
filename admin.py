@@ -268,7 +268,7 @@ class ReportStatusResultsFrame(tk.Frame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
-        self.city_label = tk.Label(self, text="Relatório de Resultados dos Status")
+        self.city_label = tk.Label(self, text="Relatório de Resultados dos Status (em ordem alfabética)")
         self.city_label.pack(pady=20)
 
         self.create_table()
@@ -281,13 +281,7 @@ class ReportStatusResultsFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute(
-            "SELECT s.status, count(*)"
-            " FROM results r"
-            " JOIN status s on s.statusid=r.statusid"
-            " GROUP by s.status"
-            " ORDER BY s.status"
-        )
+        c.callproc("status_results", [])
 
         tree = ttk.Treeview(self, show='headings')
         tree["columns"] = (
@@ -299,9 +293,9 @@ class ReportStatusResultsFrame(tk.Frame):
         tree.column("Coluna 2", width=100)
         tree.heading("Coluna 2", text="Contagem")
 
-        data = c.fetchall()
-
-        print(len(data))
+        ref_cursor_name = c.fetchone()[0]
+        ref_cursor = conn.cursor(ref_cursor_name)
+        data = ref_cursor.fetchall()
 
         for row in data:
             tree.insert('', 'end', values=row)
@@ -363,23 +357,11 @@ class ReportAirportsFrame(tk.Frame):
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
 
-        c.execute(f"SELECT c.name, a.iata_code, a.name, a.city, ROUND(CAST(d.distance as numeric(10, 2)), 2)"
-                  f" AS distance,"
-                  "CASE "
-                  "WHEN type = 'medium_airport' THEN 'Aeroporto médio'"
-                  "WHEN type = 'large_airport' THEN 'Aeroporto grande'"
-                  "ELSE type"
-                  " END AS formatted_column"
-                  " FROM airports as a"
-                  " JOIN airport_city_distances as d on a.id = d.airport_id"
-                  " JOIN geocities15k c on c.geonameid = d.city_id"
-                  f" WHERE"
-                  " type IN ('medium_airport', 'large_airport')"
-                  " AND iso_country = 'BR'"
-                  "AND c.name = %s"
-                  " ORDER BY distance", (self.city_name.get(), ))
+        c.callproc("get_airport_data", [self.city_name.get()])
+        ref_cursor_name = c.fetchone()[0]
+        ref_cursor = conn.cursor(ref_cursor_name)
 
-        data = c.fetchall()
+        data = ref_cursor.fetchall()
 
         for row in data:
             self.tree.insert('', 'end', values=row)
