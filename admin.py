@@ -176,7 +176,7 @@ class PilotoRegisterFrame(tk.Frame):
         self.dob_entry = tk.Entry(self)
         self.nationality_label = tk.Label(self, text="Nacionalidade")
         self.nationality_entry = tk.Entry(self)
-        self.wiki_label = tk.Label(self, text="Wiki")
+        self.wiki_label = tk.Label(self, text="Link no Wikipédia")
         self.wiki_entry = tk.Entry(self)
 
         self.ref_label.pack()
