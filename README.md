@@ -35,7 +35,8 @@ Para configurar o projeto localmente, siga os passos abaixo:
    > Observe que o link do Google Drive fornecido neste projeto é acessível apenas para usuários da Universidade de São Paulo (USP). Certifique-se de estar logado com um e-mail que termine com @usp.br para obter acesso ao conteúdo do Google Drive.
 
 3. **Execute os .sql**
-   Dentro da pasta `sql` execute todos os scripts apenas Uma única vez.
+
+   Dentro da pasta `sql` execute todos os scripts apenas uma única vez.
 
    1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
 
@@ -45,7 +46,7 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
    4. Utilize a query contida no arquivo `create_index_airport.sql` para criar o índice usado no Relatório 2 de Admin.
 
-   5. Os demais arquivos são funções de relatórios e overview.
+   5. Os demais arquivos são funções de relatórios, overview, e queries auxiliares, e todos precisam ser executados para a aplicação funcionar corretamente, com **exceção** do `admin_overview.sql` que contém as queries utilizadas na tela de Overview do Admin e `app.sql` que contém as queries de autenticação de login e inserção de registro na tabela `log_table`.
 
 ## Execução
 
