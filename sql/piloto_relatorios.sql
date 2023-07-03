@@ -4,7 +4,10 @@
 -- vitórias por ano e corrida. Portanto, deve aparecer na tabela as sumarizações por
 -- ano, por ano e corrida e uma sumarização geral.
 
--- indexação: results
+-- indexação: condições são sempre driverid e position da tabela results
+drop index if exists idx_relatorio5; -- 0.43 + 5.4ms
+create index idx_relatorio5 on results(driverid,position); -- 0.34 + 1.3ms
+
 create or replace function vitorias_piloto_relatorio5(
     IN _id int)
     RETURNS TABLE(Ano int,NomeCorrida text,Quantidade int) as $$
@@ -21,12 +24,11 @@ BEGIN
                 re.position = 1
         group by rollup(ra.year,ra.name);
 END; $$ language plpgsql;
-select * from vitorias_piloto_relatorio5(1);
+-- select * from vitorias_piloto_relatorio5(1);
 
 
 -- Relatório 6: lista a quantidade de resultados por cada status, apresentando o status
 -- e sua contagem, limitada ao escopo do piloto logado.
-
 create or replace function status_das_corridas_do_piloto_relatorio6(
     IN _id int)
     RETURNS TABLE(Status text,Quantidade int) as $$
@@ -47,5 +49,5 @@ BEGIN
                       on s.statusid=sc.statusid
         order by 2 desc;
 END; $$ language plpgsql;
-select * from status_das_corridas_do_piloto_relatorio6(1);
+-- select * from status_das_corridas_do_piloto_relatorio6(1);
 

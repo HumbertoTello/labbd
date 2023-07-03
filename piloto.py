@@ -142,25 +142,23 @@ class ReportWinsFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM driver WHERE driverid = %s", (piloto_id,)) # Inserir a query correta aqui
-
+        c.callproc("vitorias_piloto_relatorio5", (piloto_id,)) 
         data = c.fetchall()
 
         tree = ttk.Treeview(self, show='headings')
-        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+        tree["columns"] = ('Ano','NomeCorrida','Quantidade')
 
-        tree.column("Coluna 1", width=100)
-        tree.heading("Coluna 1", text="Coluna 1")
+        tree.column("Ano", width=100)
+        tree.heading("Ano", text="Ano")
 
-        tree.column("Coluna 2", width=100)
-        tree.heading("Coluna 2", text="Coluna 2")
+        tree.column("NomeCorrida", width=300)
+        tree.heading("NomeCorrida", text="NomeCorrida")
 
-        tree.column("Coluna 3", width=100)
-        tree.heading("Coluna 3", text="Coluna 3")
+        tree.column("Quantidade", width=100)
+        tree.heading("Quantidade", text="Quantidade")
 
         for row in data:
             tree.insert('', 'end', values=row)
-
         tree.pack()
 
 # Define a janela que exibe o relatório de resultados por status do piloto
@@ -184,36 +182,18 @@ class ReportResultsFrame(tk.Frame):
         db_config = get_config()
         conn = psycopg2.connect(**db_config)
         c = conn.cursor()
-        c.execute("SELECT * FROM driver WHERE driverid = %s", (piloto_id,)) # Inserir a query correta aqui
+        c.callproc("status_das_corridas_do_piloto_relatorio6",(piloto_id,))
 
         data = c.fetchall()
 
         tree = ttk.Treeview(self, show='headings')
-        tree["columns"] = ("Coluna 1", "Coluna 2", "Coluna 3", "Coluna 4", "Coluna 5", "Coluna 6", "Coluna 7", "Coluna 8")
+        tree["columns"] = ("Status","Quantidade")
 
-        tree.column("Coluna 1", width=100)
-        tree.heading("Coluna 1", text="Coluna 1")
+        tree.column("Status", width=200)
+        tree.heading("Status", text="Status")
 
-        tree.column("Coluna 2", width=100)
-        tree.heading("Coluna 2", text="Coluna 2")
-
-        tree.column("Coluna 3", width=100)
-        tree.heading("Coluna 3", text="Coluna 3")
-
-        tree.column("Coluna 4", width=100)
-        tree.heading("Coluna 4", text="Coluna 4")
-
-        tree.column("Coluna 5", width=100)
-        tree.heading("Coluna 5", text="Coluna 5")
-
-        tree.column("Coluna 6", width=100)
-        tree.heading("Coluna 6", text="Coluna 6")
-
-        tree.column("Coluna 7", width=100)
-        tree.heading("Coluna 7", text="Coluna 7")
-
-        tree.column("Coluna 8", width=100)
-        tree.heading("Coluna 8", text="Coluna 8")
+        tree.column("Quantidade", width=100)
+        tree.heading("Quantidade", text="Quantidade")
 
         for row in data:
             tree.insert('', 'end', values=row)

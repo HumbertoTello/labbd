@@ -10,31 +10,42 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
 1. **Instale as dependências do projeto**
 
-    Este projeto utiliza a biblioteca `psycopg2` para conexão com o PostgreSQL. Você pode instalar a biblioteca utilizando o comando abaixo:
+   Este projeto utiliza a biblioteca `psycopg2` para conexão com o PostgreSQL. Você pode instalar a biblioteca utilizando o comando abaixo:
 
-    ```sh
-    pip install psycopg2
-    ```
+   ```sh
+   pip install psycopg2
+   ```
 
-    > Nota: Este projeto assume que você está utilizando Python 3. Certifique-se de que o comando `pip` está vinculado ao Python 3. Se não estiver, você pode precisar usar `pip3` ao invés de `pip`.
+   se houver erro de instalação experimente:
+
+   ```sh
+   pip install psycopg2-binary
+   ```
+
+   > Nota: Este projeto assume que você está utilizando Python 3. Certifique-se de que o comando `pip` está vinculado ao Python 3. Se não estiver, você pode precisar usar `pip3` ao invés de `pip`.
+
+   > Em ambientes Debian/Ubuntu: se houver erro de dependência do python-tk experimente utilizar `sudo apt-get install python3-tk`
 
 2. **Configure a conexão com o banco de dados**
 
-    Crie um arquivo `config.ini` baseado no arquivo de exemplo `config.ini.example` para configurar a conexão com o seu banco de dados PostgreSQL local. O banco de dados deve conter os dados da Fórmula 1.
+   Crie um arquivo `config.ini` baseado no arquivo de exemplo `config.ini.example` para configurar a conexão com o seu banco de dados PostgreSQL local. O banco de dados deve conter os dados da Fórmula 1.
 
-    Os arquivos originais para a carga de dados podem ser encontrados no Google Drive, disponíveis [aqui](https://drive.google.com/drive/folders/13TQKEhQbwXMtd1MJ_oYFplgu8ets4QsO?usp=sharing).
+   Os arquivos originais para a carga de dados podem ser encontrados no Google Drive, disponíveis [aqui](https://drive.google.com/drive/folders/13TQKEhQbwXMtd1MJ_oYFplgu8ets4QsO?usp=sharing).
 
-    > Observe que o link do Google Drive fornecido neste projeto é acessível apenas para usuários da Universidade de São Paulo (USP). Certifique-se de estar logado com um e-mail que termine com @usp.br para obter acesso ao conteúdo do Google Drive.
+   > Observe que o link do Google Drive fornecido neste projeto é acessível apenas para usuários da Universidade de São Paulo (USP). Certifique-se de estar logado com um e-mail que termine com @usp.br para obter acesso ao conteúdo do Google Drive.
 
 3. **Execute os .sql**
+   Dentro da pasta `sql` execute todos os scripts apenas Uma única vez.
 
-    1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
+   1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
 
-    2. Utilize a query contida no arquivo `create_table_log_table.sql` para criar a tabela `log_table` no seu banco de dados local.
+   2. Utilize a query contida no arquivo `create_table_log_table.sql` para criar a tabela `log_table` no seu banco de dados local.
 
-    3. Utilize a query contida no arquivo `extensions.sql` para instalar as extensões necessárias no seu banco de dados local.
+   3. Utilize a query contida no arquivo `extensions.sql` para instalar as extensões necessárias no seu banco de dados local.
 
-    4. Utilize a query contida no arquivo `create_index_airport.sql` para criar o índice usado no Relatório 2 de Admin.
+   4. Utilize a query contida no arquivo `create_index_airport.sql` para criar o índice usado no Relatório 2 de Admin.
+
+   5. Os demais arquivos são funções de relatórios e overview.
 
 ## Execução
 
@@ -56,7 +67,7 @@ O acesso à ferramenta só pode ser feito por meio de login, onde cada usuário 
 
 ### Usuário Escuderia
 
-- Login: [constructorref]_c
+- Login: [constructorref]\_c
 - Senha: [constructorref]
 - Exemplo: Para a escuderia McLaren:
   - Login: mclaren_c
@@ -65,7 +76,7 @@ O acesso à ferramenta só pode ser feito por meio de login, onde cada usuário 
 
 ### Usuário Piloto
 
-- Login: [driverref]_d
+- Login: [driverref]\_d
 - Senha: [driverref]
 - Exemplo: Para o piloto Hamilton:
   - Login: hamilton_d
