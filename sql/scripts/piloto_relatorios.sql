@@ -20,7 +20,7 @@ BEGIN
         from results re
                  join races ra on
                 re.raceid = ra.raceid
-        where re.driverid = 1 and
+        where re.driverid = _id and
                 re.position = 1
         group by rollup(ra.year,ra.name)
         order by ra.year ;

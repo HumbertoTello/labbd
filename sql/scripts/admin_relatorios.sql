@@ -33,7 +33,7 @@ BEGIN
                  JOIN geocities15k c ON c.geonameid = d.city_id
         WHERE type IN ('medium_airport', 'large_airport')
             AND isocountry = 'BR'
-            AND c.name = p_city_name
+            AND lower(c.name) = lower(p_city_name)
         ORDER BY distance;
     
     RETURN l_cursor;
