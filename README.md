@@ -36,7 +36,7 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
 3. **Execute os .sql**
 
-   Dentro da pasta `sql` execute todos os scripts apenas uma única vez.
+   Dentro da pasta `sql` execute todos os scripts da pasta `scripts` apenas uma única vez.
 
    1. Utilize a query contida no arquivo `create_table_users.sql` para criar a tabela `users` no seu banco de dados local.
 
@@ -46,7 +46,9 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
    4. Utilize a query contida no arquivo `create_index_airport.sql` para criar o índice usado no Relatório 2 de Admin.
 
-   5. Os demais arquivos são funções de relatórios, overview, e queries auxiliares, e todos precisam ser executados para a aplicação funcionar corretamente, com **exceção** do `admin_overview.sql` que contém as queries utilizadas na tela de Overview do Admin e `app.sql` que contém as queries de autenticação de login e inserção de registro na tabela `log_table`.
+   5. Os demais arquivos contém funções de relatórios e overview e também precisam ser executados.
+
+   Dentro da pasta `reference` contém as consultas em SQL utilizadas no código, mas que não foram criados scripts de funções e índices específicos, então não precisam ser executados para a aplicação funcionar corretamente.
 
 ## Execução
 
